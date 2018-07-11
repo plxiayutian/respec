@@ -376,6 +376,8 @@
           stringifier DOMString ();
           // 12
           stringifier;
+          Promise&lt;void> complete(optional PaymentComplete result = "unknown");
+          Promise&lt;void> another(optional  /*trivia*/  PaymentComplete result = "unknown");
         };
       </pre>
       <p id="meth-basic-doc" data-dfn-for="MethBasic">
@@ -650,6 +652,16 @@
       <h2><dfn>toJSON()</dfn> method</h2>
       <p>When <a>toJSON()</a> is called, run [[!WEBIDL]]'s <a data-cite="WEBIDL#default-tojson-operation">default toJSON operation</a>.</p>
       </section>
+    </section>
+    <section>
+      <h2>Optionals and trivia</h2>
+      <pre class="idl" id="optional-trivia">
+        [Constructor(X x, optional Y y, /*trivia*/ Z y)]
+        interface Foo {
+          void foo(X x, optional Y y, /*trivia*/ optional Z z);
+        };
+        callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
+      </pre>
     </section>
   </body>
 </html>

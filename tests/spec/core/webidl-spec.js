@@ -444,10 +444,12 @@ describe("Core - WebIDL", function() {
   stringifier DOMString ();
   // 12
   stringifier;
+  Promise<void> complete(optional PaymentComplete result = "unknown");
+  Promise<void> another(optional  /*trivia*/  PaymentComplete result = "unknown");
 };`;
     expect($target.text()).toEqual(text);
-    expect($target.find(".idlMethod").length).toEqual(12);
-    expect($target.find(".idlMethName").length).toEqual(8);
+    expect($target.find(".idlMethod").length).toEqual(14);
+    expect($target.find(".idlMethName").length).toEqual(10);
     var $meth = $target.find(".idlMethod").first();
     expect($meth.find(".idlMethType").text()).toEqual("\n  // 1\n  void");
     expect($meth.find(".idlMethName").text()).toEqual("basic");
@@ -623,7 +625,9 @@ partial dictionary AnotherThing {
         .first()
         .text()
     ).toEqual('"one"');
-
+    expect(
+      doc.querySelector("a[href='#dom-enumbasic-white-space']")
+    ).toBeTruthy();
     // Links and IDs.
     expect(
       $target
@@ -657,12 +661,26 @@ partial dictionary AnotherThing {
     );
     const dfn = doc.querySelector("#dom-emptyenum-the-empty-string");
     const smokeDfn = doc.querySelector(
-      `#enum-empty-sec a[href="#dom-emptyenum-not empty"]`
+      `#enum-empty-sec a[href="#dom-emptyenum-not-empty"]`
     );
     expect(links).toBeTruthy();
     expect(dfn).toBeTruthy();
     expect(smokeDfn).toBeTruthy();
     done();
+  });
+
+  it("handles optional and trivia", () => {
+    const expected = `
+[Constructor(X x, optional Y y, /*trivia*/ Z y)]
+interface Foo {
+  void foo(X x, optional Y y, /*trivia*/ optional Z z);
+};
+callback CallBack = Z? (X x, optional Y y, /*trivia*/ optional Z z);
+    `.trim();
+    const idlElem = doc.getElementById("optional-trivia");
+    expect(idlElem.textContent).toEqual(expected);
+    const trivaComments = idlElem.querySelectorAll("span.idlSectionComment");
+    expect(trivaComments.length).toEqual(3);
   });
 
   it("should handle callbacks", function(done) {
